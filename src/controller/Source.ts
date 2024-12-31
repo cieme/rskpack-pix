@@ -1,13 +1,18 @@
 import {
   type TextStyleOptions,
+  type FederatedPointerEvent,
   Sprite,
   Text,
   Container,
   Assets,
   NineSliceSprite,
 } from "pixi.js";
+import { watchEffect } from "vue";
 
 import { Components, genLabel } from "@/core";
+
+import { LinkArrow } from "@/controller/tools/LinkArrow";
+import { store } from "@/store/store";
 
 export default class Source extends Components {
   static defaultConfig = {
@@ -20,6 +25,7 @@ export default class Source extends Components {
   constructor(config: any) {
     super(config);
     this.init();
+    this.onload();
   }
   init() {
     this.node.label = Source.defaultConfig.Label;
@@ -49,18 +55,44 @@ export default class Source extends Components {
     const text = genLabel(Source.defaultConfig.Label);
     text.anchor.set(0.5, 0);
     text.y = 20;
+    /* 箭头 */
+    const arrow = new LinkArrow();
+    arrow.node.anchor.set(0, 0.5);
+    arrow.node.x = 20;
+    arrow.node.y = 0;
+
     /* 添加到容器上 */
-    this.node.addChild(bg, selectNode, sprite, text);
+    this.node.addChild(bg, selectNode, sprite, text, arrow.node);
   }
   onload() {
     this.setEvent();
   }
   onstart() {}
   setEvent() {
-    this.node.on("click", () => {
-      this.selectNode.visible = true;
+    this.node.on("click", (event: FederatedPointerEvent) => {
+      if (event.ctrlKey) {
+        this.choose();
+      } else {
+        this.chooseSelf();
+      }
     });
   }
+  chooseSelf() {
+    store.StoreScene.value.componentList.forEach((value) => {
+      if (value.uniqueId === this.uniqueId) return;
+      (value as Source).selectNode.visible = false;
+    });
+    store.StoreScene.value.selectComponentList.clear();
+    store.StoreScene.value.selectComponentList.set(this.uniqueId, this);
+    this.selectNode.visible = true;
+  }
+  choose() {
+    store.StoreScene.value.selectComponentList.set(this.uniqueId, this);
+    this.selectNode.visible = true;
+  }
+  x = watchEffect(() => {
+    console.log(store.StoreScene.value.selectComponentList);
+  });
   removeEvent() {}
   override initVue(config: any) {}
 }

@@ -1,26 +1,17 @@
 import { type FederatedWheelEvent, Application } from "pixi.js";
 
-import Source from "@/controller/SourceController";
+import Source from "@/controller/Source";
 import { store } from "@/store/store";
-export async function main() {
-  const app = await init();
-  for (let i = 0; i < 2; i++) {
-    const source = new Source({
-      label: "Source",
-    });
-    source.node.position.x = i * 40;
-    source.node.position.y = i * 40;
-    app.stage.addChild(source.node);
 
-    store.StoreScene.value.componentList.set(source.uniqueId, source);
-  }
-  /* 变化 */
-  app.ticker.add(() => {
-    store.StoreScene.value.componentList.forEach((item) => {
-      item.node.rotation += 0.01;
-    });
-  });
+import { AppManage } from "@/utils/sceneManage";
+/**
+ * @description 初始化
+ */
+export async function main() {
+  AppManage.currentApp = AppManage.app = await init();
+  loadComponent();
 }
+/* 初始化场景 */
 async function init() {
   const app = new Application();
   globalThis.__PIXI_APP__ = app;
@@ -74,9 +65,27 @@ async function init() {
   });
   return app;
 }
+/**
+ *
+ * @param app 窗口变化函数
+ */
 function resize(app: Application) {
   app.renderer.resize(window.innerWidth, window.innerHeight);
   /* 设置舞台锚点 */
   app.stage.position.x = app.screen.width / 2;
   app.stage.position.y = app.screen.height / 2;
+}
+/**
+ * 加载组件
+ */
+function loadComponent() {
+  for (let i = 0; i < 2; i++) {
+    const source = new Source({
+      label: "Source",
+    });
+    source.node.position.x = i * 40;
+    source.node.position.y = i * 40;
+    AppManage.app.stage.addChild(source.node);
+    store.StoreScene.value.componentList.set(source.uniqueId, source);
+  }
 }
