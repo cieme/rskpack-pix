@@ -82,6 +82,7 @@ function loadComponent() {
   for (let i = 0; i < 2; i++) {
     const source = new Source({
       label: "Source",
+      tips: "draw.ts 给的config",
     });
     source.node.position.x = i * 40;
     source.node.position.y = i * 40;
