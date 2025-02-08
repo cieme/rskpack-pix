@@ -25,12 +25,12 @@ export class CommonComponents extends Components {
   }
   protected override init() {
     this.node.label = this.defaultConfig.Label;
-    this.node.interactive = true;
     /*  */
     const sprite = new Sprite();
     sprite.anchor.set(0.5, 0.5);
     sprite.label = "icon";
     this._C_Sprite = sprite;
+    this._C_Sprite.interactive = true;
     Assets.load(this.defaultConfig.Sprite).then((texture) => {
       sprite.texture = texture;
     });
@@ -69,7 +69,7 @@ export class CommonComponents extends Components {
   }
   protected override onStart() {}
   private setSelectEvent() {
-    this.node.on("click", (event: FederatedPointerEvent) => {
+    this._C_Sprite.on("click", (event: FederatedPointerEvent) => {
       if (event.ctrlKey) {
         this.choose();
       } else {

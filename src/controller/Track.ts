@@ -1,5 +1,4 @@
 import { Graphics } from "pixi.js";
-import { AppManage } from "@/utils/sceneManage";
 
 import Big from "big.js";
 import { Vector3 as Vec3, Vector3 } from "three";
@@ -7,23 +6,37 @@ import { Components } from "@/core";
 import { config } from "./trackData";
 
 export default class Track extends Components {
+  public defaultConfig = {
+    Label: "轨道",
+    Sprite: "./images/source/icon_source_000.png",
+  };
   graphics: Graphics;
   constructor() {
     super({});
+    this.createGraphics();
+  }
+  protected override init() {
+    this.node.label = this.defaultConfig.Label;
+  }
+  createGraphics() {
     const graphics = new Graphics();
     this.graphics = graphics;
-    AppManage.currentApp.stage.addChild(graphics);
     graphics.setStrokeStyle({
       width: 2,
-      color: 0xff0000,
+      color: 0x407cf4,
       cap: "round",
+      join: "round",
     });
     this.draw();
     graphics.stroke();
+    this.node.addChild(graphics);
     graphics.interactive = true;
+
     graphics.on("click", (e) => {
-      const local = graphics.toLocal(e.global);
-      this.isTouchOnTrack(new Vec3(local.x, local.y, 0));
+      this.graphics.strokeStyle.color = 0xf56c6c;
+      this.graphics.stroke();
+      // const local = graphics.toLocal(e.global);
+      // console.log(this.isTouchOnTrack(new Vec3(local.x, local.y, 0)));
     });
   }
   draw(active = false) {

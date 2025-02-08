@@ -1,4 +1,11 @@
-import { Assets, Sprite, NineSliceSprite, Texture, Container } from "pixi.js";
+import {
+  Assets,
+  Sprite,
+  NineSliceSprite,
+  Texture,
+  Container,
+  Graphics,
+} from "pixi.js";
 import { type Ref, reactive, nextTick } from "vue";
 import { uuid } from "@/utils/uuid";
 
@@ -22,11 +29,13 @@ export class Components {
   /**
    * 节点
    */
-  node: Container = new Container();
+  node: Container | Graphics = new Container();
 
   constructor(config) {
     this.config = config;
     this.initVue(config);
+    this.beforeNextTick();
+    this.runEvent("beforeNextTick");
     nextTick(() => {
       this.runEvent("beforeInit");
       this.init();
@@ -43,6 +52,7 @@ export class Components {
     }, 0);
   }
   initVue(config: any) {}
+  beforeNextTick() {}
 
   genBg(color?: number): Sprite {
     const sprite = new Sprite();
@@ -73,6 +83,7 @@ export class Components {
   /* 一套事件机制 */
   eventMap = new Map<keyof typeof this.keyList, any[]>();
   keyList = {
+    beforeNextTick: "beforeNextTick",
     beforeInit: "beforeInit",
     beforeCreate: "beforeCreate",
     created: "created",

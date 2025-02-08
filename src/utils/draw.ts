@@ -2,6 +2,7 @@ import { type FederatedWheelEvent, Application } from "pixi.js";
 
 import Source from "@/controller/Source";
 import Track from "@/controller/Track";
+import Grid from "@/controller/Grid";
 import { store } from "@/store/store";
 
 import { AppManage } from "@/utils/sceneManage";
@@ -11,7 +12,6 @@ import { AppManage } from "@/utils/sceneManage";
 export async function main() {
   AppManage.currentApp = AppManage.app = await init();
   loadComponent();
-  new Track();
 }
 /* 初始化场景 */
 async function init() {
@@ -28,6 +28,7 @@ async function init() {
     backgroundColor: 0x333333,
     backgroundAlpha: 1,
   });
+
   app.stage.label = "_root_stage";
 
   resize(app);
@@ -36,6 +37,8 @@ async function init() {
 
   window.addEventListener("resize", () => resize(app));
 
+  const grid = new Grid();
+  app.stage.addChild(grid.node);
   // /* 添加一个全屏事件 */
   app.stage.interactive = true;
   // /* 鼠标滚动事件 */
@@ -88,11 +91,16 @@ function loadComponent() {
     });
     source.node.position.x = i * 40;
     source.node.position.y = i * 40;
+    // source.node.rotation = 45 / (2 * Math.PI);
     source.addEventListener("created", () => {
       source._C_Label.text = `Source${i}`;
     });
 
     AppManage.app.stage.addChild(source.node);
     store.StoreScene.value.componentList.set(source.uniqueId, source);
+    const track = new Track();
+    track.graphics.position.x = i * 40;
+    track.graphics.position.y = i * 40;
+    AppManage.app.stage.addChild(track.node);
   }
 }

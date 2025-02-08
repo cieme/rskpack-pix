@@ -5,6 +5,7 @@
     "lint": "eslint src/**/*.{js,jsx,ts,tsx}"
   },
   "dependencies": {
+    "@pixi/filter-glow": "^5.2.1",
     "big.js": "^6.2.2",
     "lodash-es": "^4.17.21",
     "pinia": "^2.3.0",
