@@ -37,7 +37,7 @@ async function init() {
   window.addEventListener("resize", () => resize(app));
 
   // /* 添加一个全屏事件 */
-  // app.stage.interactive = true;
+  app.stage.interactive = true;
   // /* 鼠标滚动事件 */
   // app.stage.on("wheel", function (event: FederatedWheelEvent) {
   //   console.log("全屏");

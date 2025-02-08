@@ -1,4 +1,4 @@
-import { CommonComponents, genLabel } from "@/core";
+import { CommonComponents } from "@/core";
 
 export default class Source extends CommonComponents {
   public override defaultConfig = {
@@ -7,13 +7,10 @@ export default class Source extends CommonComponents {
   };
   constructor(options) {
     super(options);
-    console.log(this.config);
   }
   protected override onLoad() {
-    console.log(this.uniqueId);
+    super.onLoad();
   }
-  protected override onStart() {
-    console.log("开始");
-  }
+  protected override onStart() {}
   override initVue(config: any) {}
 }

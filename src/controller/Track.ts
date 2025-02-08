@@ -3,24 +3,13 @@ import { AppManage } from "@/utils/sceneManage";
 
 import Big from "big.js";
 import { Vector3 as Vec3, Vector3 } from "three";
-import { CommonComponents, genLabel } from "@/core";
+import { Components } from "@/core";
 import { config } from "./trackData";
-export const ratio: number = 20;
 
-function MeterToUnit(num: number) {
-  return new Big(num).mul(new Big(ratio)).toNumber();
-}
-export function Vec3MeterToUnit(position: Vec3) {
-  return new Vec3(
-    MeterToUnit(position.x),
-    MeterToUnit(position.y),
-    MeterToUnit(position.z),
-  );
-}
-export default class Track extends CommonComponents {
+export default class Track extends Components {
   graphics: Graphics;
   constructor() {
-    super();
+    super({});
     const graphics = new Graphics();
     this.graphics = graphics;
     AppManage.currentApp.stage.addChild(graphics);
@@ -34,8 +23,7 @@ export default class Track extends CommonComponents {
     graphics.interactive = true;
     graphics.on("click", (e) => {
       const local = graphics.toLocal(e.global);
-
-      console.log(this.isTouchOnTrack(new Vec3(local.x, local.y, 0)));
+      this.isTouchOnTrack(new Vec3(local.x, local.y, 0));
     });
   }
   draw(active = false) {
@@ -225,4 +213,15 @@ export default class Track extends CommonComponents {
       }
     }
   }
+}
+export const ratio: number = 20;
+function MeterToUnit(num: number) {
+  return new Big(num).mul(new Big(ratio)).toNumber();
+}
+export function Vec3MeterToUnit(position: Vec3) {
+  return new Vec3(
+    MeterToUnit(position.x),
+    MeterToUnit(position.y),
+    MeterToUnit(position.z),
+  );
 }

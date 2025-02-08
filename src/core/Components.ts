@@ -1,5 +1,5 @@
 import { Assets, Sprite, NineSliceSprite, Texture, Container } from "pixi.js";
-import { type Ref, reactive } from "vue";
+import { type Ref, reactive, nextTick } from "vue";
 import { uuid } from "@/utils/uuid";
 
 export class Components {
@@ -27,6 +27,20 @@ export class Components {
   constructor(config) {
     this.config = config;
     this.initVue(config);
+    nextTick(() => {
+      this.runEvent("beforeInit");
+      this.init();
+      this.runEvent("beforeCreate");
+      this.onLoad();
+      this.runEvent("created");
+    });
+    let timer = setTimeout(() => {
+      this.runEvent("beforeMounted");
+      this.onStart();
+      this.runEvent("mounted");
+      clearTimeout(timer);
+      timer = null;
+    }, 0);
   }
   initVue(config: any) {}
 
@@ -89,6 +103,11 @@ export class Components {
   removeAllEventListeners() {
     this.eventMap.clear();
   }
+  /*  */
+  protected init() {}
+  protected onLoad() {}
+  protected onStart() {}
+
   /*  */
   dispose(): void {
     this.config = null;

@@ -5,7 +5,7 @@ import {
   Assets,
   NineSliceSprite,
 } from "pixi.js";
-import { nextTick } from "vue";
+
 import { Components, genLabel } from "@/core";
 import { LinkArrow } from "@/controller/tools/LinkArrow";
 import { store } from "@/store/store";
@@ -22,23 +22,8 @@ export class CommonComponents extends Components {
 
   constructor(config?: any) {
     super(config);
-    nextTick(() => {
-      this.runEvent("beforeInit");
-      this.init();
-      this.runEvent("beforeCreate");
-      this.onLoad();
-      this.runEvent("created");
-      this.setSelectEvent();
-    });
-    let timer = setTimeout(() => {
-      this.runEvent("beforeMounted");
-      this.onStart();
-      this.runEvent("mounted");
-      clearTimeout(timer);
-      timer = null;
-    }, 0);
   }
-  private init() {
+  protected override init() {
     this.node.label = this.defaultConfig.Label;
     this.node.interactive = true;
     /*  */
@@ -79,8 +64,10 @@ export class CommonComponents extends Components {
     this.node.addChild(bg, _N_Select, sprite, text, arrow.node);
     /*  */
   }
-  protected onLoad() {}
-  protected onStart() {}
+  protected override onLoad() {
+    this.setSelectEvent();
+  }
+  protected override onStart() {}
   private setSelectEvent() {
     this.node.on("click", (event: FederatedPointerEvent) => {
       if (event.ctrlKey) {
