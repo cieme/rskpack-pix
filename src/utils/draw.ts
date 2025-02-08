@@ -1,6 +1,7 @@
 import { type FederatedWheelEvent, Application } from "pixi.js";
 
 import Source from "@/controller/Source";
+import Track from "@/controller/Track";
 import { store } from "@/store/store";
 
 import { AppManage } from "@/utils/sceneManage";
@@ -10,6 +11,10 @@ import { AppManage } from "@/utils/sceneManage";
 export async function main() {
   AppManage.currentApp = AppManage.app = await init();
   loadComponent();
+  new Track();
+  const graphics = new Track().graphics;
+  graphics.strokeStyle.color = 0xffff00;
+  graphics.position.set(200, 100);
 }
 /* 初始化场景 */
 async function init() {
@@ -86,6 +91,10 @@ function loadComponent() {
     });
     source.node.position.x = i * 40;
     source.node.position.y = i * 40;
+    source.addEventListener("created", () => {
+      source._C_Label.text = `Source${i}`;
+    });
+
     AppManage.app.stage.addChild(source.node);
     store.StoreScene.value.componentList.set(source.uniqueId, source);
   }

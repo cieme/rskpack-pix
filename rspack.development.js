@@ -5,13 +5,13 @@ const config = merge(baseConfig, {
   mode: "development",
   devServer: {
     hot: true,
-    proxy: [
-      {
-        context: ["/api"],
-        target: "http://localhost:3000",
-        changeOrigin: true,
-      },
-    ],
+    // proxy: [
+    //   {
+    //     context: ["/api"],
+    //     target: "http://localhost:3000",
+    //     changeOrigin: true,
+    //   },
+    // ],
   },
 });
 module.exports = config;

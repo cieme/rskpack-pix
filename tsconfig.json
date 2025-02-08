@@ -4,6 +4,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "noImplicitOverride": true
+    "noImplicitOverride": true,
+    "resolveJsonModule": true
   }
 }

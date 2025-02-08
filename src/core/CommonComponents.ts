@@ -9,25 +9,33 @@ import { nextTick } from "vue";
 import { Components, genLabel } from "@/core";
 import { LinkArrow } from "@/controller/tools/LinkArrow";
 import { store } from "@/store/store";
+
 export class CommonComponents extends Components {
   public defaultConfig = {
     Label: "组件",
     Sprite: "./images/source/icon_source_000.png",
   };
 
-  selectNode: NineSliceSprite = null;
-  _labelComponent: Text = null;
+  _N_Select: NineSliceSprite = null;
+  _C_Label: Text = null;
+  _C_Sprite: Sprite = null;
 
-  constructor(config: any) {
+  constructor(config?: any) {
     super(config);
-    this.init();
     nextTick(() => {
+      this.runEvent("beforeInit");
+      this.init();
+      this.runEvent("beforeCreate");
       this.onLoad();
+      this.runEvent("created");
       this.setSelectEvent();
     });
     let timer = setTimeout(() => {
+      this.runEvent("beforeMounted");
       this.onStart();
+      this.runEvent("mounted");
       clearTimeout(timer);
+      timer = null;
     }, 0);
   }
   private init() {
@@ -37,6 +45,7 @@ export class CommonComponents extends Components {
     const sprite = new Sprite();
     sprite.anchor.set(0.5, 0.5);
     sprite.label = "icon";
+    this._C_Sprite = sprite;
     Assets.load(this.defaultConfig.Sprite).then((texture) => {
       sprite.texture = texture;
     });
@@ -47,16 +56,16 @@ export class CommonComponents extends Components {
     bg.anchor.set(0.5, 0.5);
     bg.label = "背景色";
     /*  */
-    const selectNode = this.genSelect(0x407cf4);
-    selectNode.width = 40;
-    selectNode.height = 40;
-    selectNode.pivot.set(20, 20); // 这行不太理解
-    selectNode.label = "选中";
-    selectNode.visible = false;
-    this.selectNode = selectNode;
+    const _N_Select = this.genSelect(0x407cf4);
+    _N_Select.width = 40;
+    _N_Select.height = 40;
+    _N_Select.pivot.set(20, 20); // 这行不太理解
+    _N_Select.label = "选中";
+    _N_Select.visible = false;
+    this._N_Select = _N_Select;
     /* 文字 */
     const text = genLabel(this.defaultConfig.Label);
-    this._labelComponent = text;
+    this._C_Label = text;
     text.label = "label";
     text.anchor.set(0.5, 0);
     text.y = 20;
@@ -67,7 +76,7 @@ export class CommonComponents extends Components {
     arrow.node.y = 0;
 
     /* 添加到容器上 */
-    this.node.addChild(bg, selectNode, sprite, text, arrow.node);
+    this.node.addChild(bg, _N_Select, sprite, text, arrow.node);
     /*  */
   }
   protected onLoad() {}
@@ -84,20 +93,28 @@ export class CommonComponents extends Components {
   private chooseSelf() {
     store.StoreScene.value.componentList.forEach((value) => {
       if (value.uniqueId === this.uniqueId) return;
-      (value as CommonComponents).selectNode.visible = false;
+      (value as CommonComponents)._N_Select.visible = false;
     });
     store.StoreScene.value.selectComponentList.clear();
     store.StoreScene.value.selectComponentList.set(this.uniqueId, this);
-    this.selectNode.visible = true;
+    this._N_Select.visible = true;
   }
   private choose() {
     store.StoreScene.value.selectComponentList.set(this.uniqueId, this);
-    this.selectNode.visible = true;
+    this._N_Select.visible = true;
   }
+
   removeEvent() {}
+
   override initVue(config: any) {}
 
+  /*  */
   updateLabel(text: string) {
-    this._labelComponent.text = text;
+    this._C_Label.text = text;
+  }
+  updateIcon(url: string) {
+    Assets.load(url).then((texture) => {
+      this._C_Sprite.texture = texture;
+    });
   }
 }

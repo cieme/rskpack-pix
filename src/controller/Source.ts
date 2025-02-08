@@ -1,7 +1,7 @@
 import { CommonComponents, genLabel } from "@/core";
 
 export default class Source extends CommonComponents {
-  public options = {
+  public override defaultConfig = {
     Label: "源",
     Sprite: "./images/source/icon_source_000.png",
   };
@@ -9,12 +9,11 @@ export default class Source extends CommonComponents {
     super(options);
     console.log(this.config);
   }
+  protected override onLoad() {
+    console.log(this.uniqueId);
+  }
   protected override onStart() {
     console.log("开始");
-  }
-  protected override onLoad() {
-    this.updateLabel(this.options.Label);
-    console.log(this.uniqueId);
   }
   override initVue(config: any) {}
 }
