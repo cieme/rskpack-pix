@@ -12,9 +12,6 @@ export async function main() {
   AppManage.currentApp = AppManage.app = await init();
   loadComponent();
   new Track();
-  const graphics = new Track().graphics;
-  graphics.strokeStyle.color = 0xffff00;
-  graphics.position.set(200, 100);
 }
 /* 初始化场景 */
 async function init() {

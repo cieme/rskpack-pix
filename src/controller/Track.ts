@@ -34,7 +34,7 @@ export default class Track extends CommonComponents {
     graphics.interactive = true;
     graphics.on("click", (e) => {
       const local = graphics.toLocal(e.global);
-      // console.log(local);
+
       console.log(this.isTouchOnTrack(new Vec3(local.x, local.y, 0)));
     });
   }
@@ -91,8 +91,6 @@ export default class Track extends CommonComponents {
       endAngle,
       end.radian > 0 ? true : false, // 反过来写
     );
-
-    // console.info('drawArc: ', startAngle, endAngle, end.radian);
   }
   getAngle(start, center) {
     const x = start.x - center.x;
@@ -107,6 +105,7 @@ export default class Track extends CommonComponents {
       let end = config.pointList[index + 1];
 
       let distance = this.touchDistance(start, end, pos);
+
       let max = MeterToUnit(configLineWidth) / 2;
       if (max < 8) {
         max = 8;
@@ -143,10 +142,10 @@ export default class Track extends CommonComponents {
    */
   pointToSegmentDistance(start: Vec3, end: Vec3, pos: Vec3) {
     // 计算线段的向量 AB 和 AP
-    const AB = new Vec3();
-    const AP = new Vec3();
-    end.sub(start);
-    pos.sub(start);
+    const AB = end.clone();
+    const AP = pos.clone();
+    AB.sub(start);
+    AP.sub(start);
 
     // 计算 AB 的平方（用于投影）
     const AB2 = AB.dot(AB);
