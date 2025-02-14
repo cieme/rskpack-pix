@@ -84,7 +84,7 @@ function resize(app: Application) {
  * 加载组件
  */
 function loadComponent() {
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 1; i++) {
     const source = new Source({
       label: "Source",
       tips: "draw.ts 给的config",
